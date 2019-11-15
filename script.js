@@ -15,7 +15,7 @@ const progress = document.getElementById("renderProgress");
 
 const scoreDiv = document.getElementById("scoreContainer");
 
-const questionTime = 75;
+const questionTime = 15;
 
 const gaugeWidth = 150;
 
@@ -33,20 +33,18 @@ var score = 0;
 
 const userInitials = document.getElementById("initials");
 
-
 const localStorage = document.getElementById("highscore");
+
+
 
 var highscore = 0;
 
-window.localStorage.setItem("name");
-JSON.parse(window.localStorage.getItem('user'));
-indow.localStorage.removeItem('name');
-var KeyName = window.localStorage.key(index);
-if (typeof(Storage) !== "undefined") {
-    // Code for localStorage
-    } else {
-    // No web storage Support.
+var TIMER = undefined
+// It's supposed to be a function
+function scoreRender() {
+
 }
+
 
 
 
@@ -54,7 +52,7 @@ if (typeof(Storage) !== "undefined") {
 
     var questions = [
         {
-            title: "Which of the animators from disney designed Cody for Disney's The Recuers Down Under?",
+            title: "Which of the animators from Disney designed Cody for Disney's The Recuers Down Under?",
             choices: ["Mark Henn", "Glen Keane", "Russ Edmonds", "Andreas Deja"],
             correct: "Russ Edmonds",
             wrong: ["Mark Henn", "Glen Keane", "Andreas Deja"]
@@ -89,68 +87,24 @@ function newFunction() {
     return { userInitials: initials, score: timeScore };
 }
 
-    function renderQuestion() {
+    function renderQuestion(index) {
         console.log (questions)
 
         // write question
         var question = document.createElement("p");
-        question.innerHTML = questions[0].title
+        question.innerHTML = questions[index].title
         questionElement.appendChild(question);
-
+    
         // make buttons
-        console.log (questions [0].choices)
+        console.log (questions [index].choices)
        
-        for (var i = 0; i < questions[0].choices.length; i++) {
+        for (var i = 0; i < questions[index].choices.length; i++) {
             var buttons = document.createElement("button");
-            buttons.innerHTML = questions[0].choices[i]
+            buttons.innerHTML = questions[index].choices[i]
             questionElement.appendChild(buttons)  
-        }
+        }}
+    
 
-        var question = document.createElement("p");
-        question.innerHTML = questions[1].title
-        questionElement.appendChild(question);
-
-        console.log (questions[1].choices)
-        for (var i = 0; i < questions[1].choices.length; i++) {
-            var buttons = document.createElement("button");
-            buttons.innerHTML = questions[1].choices[i]
-            questionElement.appendChild(buttons)
-        }
-
-        var question = document.createElement("p");
-        question.innerHTML = questions[2].title
-        questionElement.appendChild(question);
-
-        console.log (questions[2].choices)
-        for (var i = 0; i < questions[2].choices.length; i++) {
-            var buttons = document.createElement("button");
-            buttons.innerHTML = questions[2].choices[i]
-            questionElement.appendChild(buttons)
-        }
-
-        var question = document.createElement("p");
-        question.innerHTML = questions[3].title
-        questionElement.appendChild(question);
-
-        console.log (questions[3].choices)
-        for (var i = 0; i < questions[3].choices.length; i++) {
-        var buttons = document.createElement("button");
-            buttons.innerHTML = questions[3].choices[i]
-            questionElement.appendChild(buttons)
-        }
-
-        var question = document.createElement("p");
-        question.innerHTML = questions[4].title
-        questionElement.appendChild(question);
-
-        console.log (questions[4].choices)
-        for (var i = 0; i < questions[4].choices.length; i++) {
-            var buttons = document.createElement("button");
-            buttons.innerHTML = questions[4].choices[i]
-            questionElement.appendChild(buttons)
-        }
-
-    }
 
     // renderQuestion();
 
@@ -158,13 +112,45 @@ function newFunction() {
     start.addEventListener("click",startQuiz);
     function startQuiz(){
         start.style.display = "none";
-        renderQuestion();
+        renderQuestion(0);
         quiz.style.display = "block";
         renderCounter();
         TIMER = setInterval(renderCounter,1000); 
+
+// check to see if the answer is right
+    correct.addEventListener("click",answerisRight);
+    function answerisRight(){
+      correct.style.display = "none";
+      renderQuestion(0); 
+      quiz.style.display = "block";
+      renderCounter();
+      TIMER = setInterval(renderCounter,1000);
+
+// check to see if the answer is wrong
+wrong.addEventListener("click", answerIsWrong);
+function answerIsWrong(){
+    correct.style.display = "none";
+    renderQuestion(0);
+    quiz.style.display = "block";
+      renderCounter();
+      TIMER = setInterval(renderCounter,1000);
+}
     }
 
-    choices.addEventListener("click", checkAnswer);
+//
+    }
+    
+// Check to see if the answer is wrong
+    function answerIsWrong(){
+        if(runningQuestion < lastQuestion){
+            runningQuestion++;
+            renderQuestion(0);
+        }else{
+            clearInterval(TIMER);
+                scoreRender();
+    }
+    }
+    
     
 
 
@@ -175,8 +161,8 @@ function newFunction() {
             timeGauge.style.width = count * timeGauge + "px";
             count++
         }else{
-            count = 0;
-            
+            count = 0; }
+          
             answerIsWrong();
             if(runningQuestion < lastQuestion){
                 runningQuestion++;
@@ -185,112 +171,22 @@ function newFunction() {
                 
                 clearInterval(TIMER);
                 scoreRender();
-            }
+       
+        
+        
+            
         }
+        
+        
     }
-    
-    function checkAnswer(answer){
-        if(questions[runningQuestionIndex].correct==answer){
-            score++;
-            answerIsCorrect();
-        }else{
-            answerIsWrong();
-        }
-        if(runningQuestionIndex < lastQuestionIndex){
-            count = 0;
-            runningQuestionIndex++;
-            questionRender();
-        }else{
-            clearInterval(TIMER);
-            scoreRender();
-        }
+    function getformattedSeconds(){
+
+    var secondsLeft = (totalSesonds - secondsElasped) % 60;
+    var formattedSeconds;
+    if (secondsLeft < 10) {
+        formattedSeconds = "0" + secondsLeft;
+    } else {
+        formattedSeconds = secondsLeft;
     }
-
-
-function highScore(score) {
-    var saved = 0;
-    try { saved = parseFloat(localStorage.highScore); } catch (e) { saved = 0; }
-    if (!(typeof score === 'undefined')) {
-        try { score = parseFloat(score); } catch (e) { score = 0; }
-        if (score>saved) {
-            saved = score;
-            localStorage.highScore = '' + score;
-        }
-    }
-    if (isNaN(saved)) {
-        saved = 0;
-        localStorage.highScore = '0';
-    }
-    return saved;
+    return formattedSeconds;
 }
-
-function answerIsCorrect(){
-    document.getElementById(runningQuestion)
-}
-
-function answerIsWrong(){
-    document.getElementById(runningQuestion)
-}
-
-function scoreRender(){
-    // scoreDiv.style.display.bold
-    
-}
-
-var score = 0;
-var highscore = 0;
-localStorage.setItem("highscore",0);
-
-if (score > parseInt(localStorage.getItem("highscore"))) {
-  localStorage.setItem("highscore", score);
-}
-
-var storagedHighScore = localStorage.getItem("highscore");
-if (storagedHighScore  || score > parseInt(storagedHighScore)) {
-  localStorage.setItem("highscore", score);
-}
-//Store the total number of questions
-var totalQuestions = $('5.questions').size(1);
-
-//Set the current question to display to 1
-var currentQuestion = 1;
-
-//Store the selector in a variable.
-//It is good practice to prefix jQuery selector variables with a $
-$questions = $('5.questions');
-
-//Hide all the questions
-$questions.hide(4);
-
-//Show the first question
-$($questions.get(currentQuestion)).fadeIn(1);
-
-//attach a click listener to the HTML element with the id of 'next'
-$('#next').click(function () {
-
-     //fade out the current question,
-     //putting a function inside of fadeOut calls that function 
-     //immediately after fadeOut is completed, 
-     //this is for a smoother transition animation
-     $($questions.get(currentQuestion)).fadeOut(function () {
-
-        //increment the current question by one
-        currentQuestion = currentQuestion + 1;
-
-        //if there are no more questions do stuff
-        if (currentQuestion == totalQuestions) {
-
-            var result = sum_values()
-
-            //do stuff with the result
-            alert(result);
-
-        } else {
-
-            //otherwise show the next question
-            $($questions.get(currentQuestion)).fadeIn();
-
-        }
-    });
-
-});
