@@ -202,4 +202,4 @@ function generate() {
 }
 document.getElementById("initials").innerHTML = "initials" + "<br /r>";
 
-document.getElementById("highscore").innerHTML = "highscore"
+document.getElementById("highscore").innerHTML = "highscore";
