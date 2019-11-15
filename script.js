@@ -190,3 +190,16 @@ function answerIsWrong(){
     }
     return formattedSeconds;
 }
+
+
+function generate() {
+    let userInitials = initials
+    var complexity = prompt("How many letters you want in your password?");
+        
+        if (complexity > 6 || complexity < 3){
+        alert("You need intials btween 3 - 6  to make a password.");
+        return; 
+}
+document.getElementById("initials").innerHTML = "initials" + "<br /r>";
+
+document.getElementById("highscore").innerHTML = "highscore"
