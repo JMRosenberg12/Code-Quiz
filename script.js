@@ -37,7 +37,6 @@ const localStorage = document.getElementById("highscore");
 
 
 
-var highscore = 0;
 
 var TIMER = undefined
 // It's supposed to be a function
@@ -101,7 +100,13 @@ function newFunction() {
         for (var i = 0; i < questions[index].choices.length; i++) {
             var buttons = document.createElement("button");
             buttons.innerHTML = questions[index].choices[i]
-            questionElement.appendChild(buttons)  
+            questionElement.appendChild(buttons) 
+            
+            if (questions[index].choices[i] === questions[index].correct){
+                buttons.dataset.correct = true 
+            }
+            buttons.addEventListener("click",answerisRight); 
+            
         }}
     
 
@@ -116,29 +121,21 @@ function newFunction() {
         quiz.style.display = "block";
         renderCounter();
         TIMER = setInterval(renderCounter,1000); 
-
+    }
 // check to see if the answer is right
-    correct.addEventListener("click",answerisRight);
-    function answerisRight(){
-      correct.style.display = "none";
+    function answerisRight(event){
+        console.log (event.target.dataset.correct)
+    //   correct.style.display = ();
       renderQuestion(0); 
       quiz.style.display = "block";
       renderCounter();
-      TIMER = setInterval(renderCounter,1000);
+      TIMER = setInterval(renderCounter,1000);  
 
-// check to see if the answer is wrong
-wrong.addEventListener("click", answerIsWrong);
-function answerIsWrong(){
-    correct.style.display = "none";
-    renderQuestion(0);
-    quiz.style.display = "block";
-      renderCounter();
-      TIMER = setInterval(renderCounter,1000);
-}
+
     }
 
 //
-    }
+    
     
 // Check to see if the answer is wrong
     function answerIsWrong(){
@@ -200,7 +197,8 @@ function generate() {
         alert("You need intials btween 3 - 6  to make a password.");
         return; 
 }
-document.getElementById("initials").innerHTML = "initials" + "<br /r>";
+document.getElementById("initials").innerHTML = highscore + "<br /r>";
 
 document.getElementById("highscore").innerHTML = "highscore";
+
 }
