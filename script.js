@@ -38,6 +38,10 @@ const localStorage = document.getElementById("highscore");
 
 
 
+
+
+
+
 var TIMER = undefined
 // It's supposed to be a function
 function scoreRender() {
@@ -45,8 +49,8 @@ function scoreRender() {
 }
 
 
-
-
+// current question number
+    var currentQuestion = 0;
     
 
     var questions = [
@@ -79,7 +83,7 @@ function scoreRender() {
             choices: ["Abbott & Costello", "Batman & Robin", "The Three Stooges", "Jeannie & Babu"],
             correct: "Abott & Costello",
             wrong: ["Batman & Robin", "The Three Stooges", "Jeannie & Babu"]
-        },
+        }
     ];
     
 function newFunction() {
@@ -87,15 +91,16 @@ function newFunction() {
 }
 
     function renderQuestion(index) {
-        console.log (questions)
+        // console.log (questions)
 
         // write question
         var question = document.createElement("p");
         question.innerHTML = questions[index].title
         questionElement.appendChild(question);
+        
     
         // make buttons
-        console.log (questions [index].choices)
+        // console.log (questions [index].choices)
        
         for (var i = 0; i < questions[index].choices.length; i++) {
             var buttons = document.createElement("button");
@@ -105,7 +110,7 @@ function newFunction() {
             if (questions[index].choices[i] === questions[index].correct){
                 buttons.dataset.correct = true 
             }
-            buttons.addEventListener("click",answerisRight); 
+            buttons.addEventListener("click", checkCorrectAnswer); 
             
         }}
     
@@ -123,30 +128,41 @@ function newFunction() {
         TIMER = setInterval(renderCounter,1000); 
     }
 // check to see if the answer is right
-    function answerisRight(event){
-        console.log (event.target.dataset.correct)
-    //   correct.style.display = ();
-      renderQuestion(0); 
-      quiz.style.display = "block";
-      renderCounter();
-      TIMER = setInterval(renderCounter,1000);  
+    function checkCorrectAnswer(event){
+        
+        if (event.target.dataset.correct){
+            // if it's a correct answer
+            console.log ("correct") 
+            score = score + 1
+        }else{ console.log ("wrong") 
 
+
+        }
+        
+            
+            questionElement.innerHTML = '';
+            console.log(currentQuestion)
+            // if this question is not the last question,
+          if (currentQuestion != 4  ) {
+             
+          
+                currentQuestion = currentQuestion + 1
+                renderQuestion(currentQuestion); 
+                renderQuestion
+                quiz.style.display = "block";
+                renderCounter();
+                TIMER = setInterval(renderCounter,1000);  
+          }else {
+              // if this is the last question, your score is at the console
+              var scoreMessage = document.createElement("h1");
+              scoreMessage.innerHTML = score + " out of 5"
+              questionElement.appendChild(scoreMessage);
+          }
 
     }
 
-//
     
-    
-// Check to see if the answer is wrong
-    function answerIsWrong(){
-        if(runningQuestion < lastQuestion){
-            runningQuestion++;
-            renderQuestion(0);
-        }else{
-            clearInterval(TIMER);
-                scoreRender();
-    }
-    }
+
     
     
 
@@ -160,19 +176,15 @@ function newFunction() {
         }else{
             count = 0; }
           
-            answerIsWrong();
-            if(runningQuestion < lastQuestion){
-                runningQuestion++;
-                renderQuestion();
-            }else{
+            
                 
-                clearInterval(TIMER);
-                scoreRender();
+                // clearInterval(TIMER);
+                // scoreRender();
        
         
         
             
-        }
+        
         
         
     }
